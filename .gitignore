@@ -1,0 +1,33 @@
+# Archivos y directorios de Python
+*.pyc
+*.pyo
+__pycache__/
+
+# Entornos virtuales
+venv/
+env/
+.virtualenv/
+
+# Configuración de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos relacionados a Django
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+
+# Archivos de logs
+*.log
+
+# Configuración de herramientas
+.idea/
+.vscode/
+*.env
+*.pot
+*.mo
+
+# Archivos temporales
+*.swp
+

@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row g-4">
+        <!-- Galería de Imágenes -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-3">
+                    <!-- Imagen Principal -->
+                    <div class="text-center mb-3">
+                        <img src="{{ product.images.first.get_image_url }}" 
+                             alt="{{ product.name }}"
+                             class="img-fluid rounded product-main-image"
+                             id="mainImage"
+                             style="max-height: 400px; width: auto; object-fit: contain;">
+                    </div>
+                    
+                    <!-- Miniaturas -->
+                    <div class="d-flex flex-wrap gap-2 justify-content-center">
+                        {% for image in product.images.all %}
+                        <div class="thumbnail-container">
+                            <img src="{{ image.get_image_url }}" 
+                                 alt="{{ image.alt_text|default:product.name }}"
+                                 class="img-thumbnail thumbnail {% if forloop.first %}active{% endif %}"
+                                 style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                 onclick="changeImage(this, '{{ image.get_image_url }}')">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detalles del Producto -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h1 class="h2 mb-3">{{ product.name }}</h1>
+                    
+                    <!-- Rating -->
+                    <div class="product-rating mb-2">
+                        <p>
+                          <span class="text-warning">
+                            {% for i in rating_range %}
+                            {% with forloop.counter|add:1 as incremented_counter %}
+                              {% if forloop.counter <= product_rating%} 
+                               <i class="bi bi-star-fill text-warning"></i> 
+                              {% elif product_rating > forloop.counter and product_rating < incremented_counter %}
+                              <i class="bi bi-star-half text-warning"></i>
+                              {% else %}
+                              <i class="bi bi-star text-warning"></i>
+                              
+                              {% endif %}   
+                            {% endwith %}
+                            {% endfor %}
+                          </span>
+                          <small class="text-muted">{{ product_rating}}</small>
+                        </p>
+                      </div>
+                    
+                    <!-- Precio -->
+                    <div class="mb-4">
+                        <span class="h3 text-danger">${{ product.end_price }}</span>
+                        {% if product.offer_price %}
+                        <span class="text-muted text-decoration-line-through ms-2">${{ product.offer_price }}</span>
+                        <span class="badge bg-danger ms-2">Oferta</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Descripción -->
+                    <p class="mb-4 lead">{{ product.description }}</p>
+                    
+                    <!-- Color (opcional) -->
+                    {% comment %} <div class="mb-4">
+                        <h5 class="mb-3">Color:</h5>
+                        <div class="color-options d-flex gap-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="color" id="colorBlack" checked>
+                                <label class="form-check-label" for="colorBlack">
+                                    <span class="color-swatch bg-dark"></span> Negro
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="color" id="colorSilver">
+                                <label class="form-check-label" for="colorSilver">
+                                    <span class="color-swatch bg-secondary"></span> Plata
+                                </label>
+                            </div> 
+                        </div>
+                    </div> {% endcomment %}
+                    
+                    <!-- Cantidad -->
+                    <div class="mb-4">
+                        <label for="quantity" class="form-label">Cantidad:</label>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-outline-secondary quantity-btn" onclick="changeQuantity(-1)">-</button>
+                            <input type="number" id="quantity" value="1" min="1" class="form-control text-center mx-2" style="width: 70px;">
+                            <button class="btn btn-outline-secondary quantity-btn" onclick="changeQuantity(1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de Acción -->
+                    <div class="d-grid gap-2 d-md-flex">
+                        <form action="{% url 'checkout_step1' product.product_id %}" method="post" class="w-100">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="bi-cart me-2"></i> Completar pedido
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .product-main-image {
+        transition: opacity 0.3s ease;
+    }
+    .thumbnail {
+        transition: all 0.2s ease;
+        border: 2px solid transparent;
+    }
+    .thumbnail:hover {
+        border-color: #0d6efd;
+        transform: scale(1.05);
+    }
+    .thumbnail.active {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+    }
+    .color-swatch {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 5px;
+        vertical-align: middle;
+        border: 1px solid #dee2e6;
+    }
+    .quantity-btn {
+        width: 40px;
+    }
+</style>
+
+<script>
+    function changeImage(element, src) {
+        // Cambiar imagen principal
+        const mainImage = document.getElementById('mainImage');
+        mainImage.style.opacity = 0;
+        
+        setTimeout(() => {
+            mainImage.src = src;
+            mainImage.style.opacity = 1;
+        }, 150);
+        
+        // Actualizar miniaturas activas
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.classList.remove('active');
+        });
+        element.classList.add('active');
+    }
+    
+    function changeImageToFirst() {
+        const firstThumbnail = document.querySelector('.thumbnail');
+        if (firstThumbnail) {
+            firstThumbnail.click();
+        }
+    }
+    
+    function changeQuantity(change) {
+        const quantityInput = document.getElementById('quantity');
+        let newValue = parseInt(quantityInput.value) + change;
+        if (newValue < 1) newValue = 1;
+        quantityInput.value = newValue;
+    }
+</script>
+{% endblock %}
