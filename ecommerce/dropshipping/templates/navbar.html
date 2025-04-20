@@ -7,15 +7,32 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
+                <li>
+                <form method="post" action="{% url 'set_currency' %}">
+                    {% csrf_token %}
+                    <select name="currency" class="form-select me-5 w-3" onchange="this.form.submit()" >
+                        <option value="COP" {% if request.session.currency == 'COP' %}selected{% endif %}>🇨🇴 COP</option>
+                        <option value="USD" {% if request.session.currency == 'USD' %}selected{% endif %}>🇺🇸 USD</option>
+                        <option value="EUR" {% if request.session.currency == 'EUR' %}selected{% endif %}>🇪🇺 EUR</option>
+                        <option value="MXN" {% if request.session.currency == 'MXN' %}selected{% endif %}>🇲🇽 MXN</option>
+                        <option value="ARS" {% if request.session.currency == 'ARS' %}selected{% endif %}>🇦🇷 ARS</option>
+                        <option value="BRL" {% if request.session.currency == 'BRL' %}selected{% endif %}>🇧🇷 BRL</option>
+                        <option value="CLP" {% if request.session.currency == 'CLP' %}selected{% endif %}>🇨🇱 CLP</option>
+                        <option value="PEN" {% if request.session.currency == 'PEN' %}selected{% endif %}>🇵🇪 PEN</option>
+                    </select>
+                </form>
+                </li>
                 <li class="nav-item"><a class="nav-link me-lg-3" href="#features">Features</a></li>
                 <li class="nav-item"><a class="nav-link me-lg-3" href="{% url 'home' %}">Inicio</a></li>
             </ul>
-            <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" data-bs-toggle="modal" data-bs-target="#products-section">
+            <a href="{% url 'product_detail' "07c52bf2-1baa-41fa-bc3d-942663892c39" %}">
+            <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" data-bs-target="#products-section">
                 <span class="d-flex align-items-center">
                     <i class="bi-shop me-2"></i>
                     <span class="small">Comprar ahora</span>
                 </span>
             </button>
+        </a>
         </div>
     </div>
 </nav>

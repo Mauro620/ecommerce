@@ -1,58 +1,31 @@
 {% extends 'checkout/process.html' %}
-{% comment %} {% load crispy_forms_tags %} {% endcomment %}
+{% load static %}
 
 {% block checkout_form %}
 <div class="card border-0 shadow-sm rounded-3">
     <div class="card-body p-4">
-        <h4 class="mb-4 text-primary">Información del Cliente</h4>
+        <h4 class="mb-4 text-primary"><strong>Información del Cliente</strong></h4>
         
-        <form method="post" class="needs-validation" novalidate>
+        <form method="post" id="customerInfoForm" class="needs-validation" novalidate>
             {% csrf_token %}
             
-            <div class="row g-3 mb-4 ">
-                <div class="col-md-6 my-2">
-                    <div class="form-floating">
-                        {{ form.first_name }}
-                        <div class="invalid-feedback">
-                            Por favor ingresa tu nombre.
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 my-2">
-                    <div class="form-floating">
-                        {{ form.last_name }}
-                        {% comment %} <label for="{{ form.last_name.id_for_label }}">Apellido</label> {% endcomment %}
-                        <div class="invalid-feedback">
-                            Por favor ingresa tu apellido.
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 my-2">
-                    <div class="form-floating">
-                        {{ form.email }}
-                        {% comment %} <label for="{{ form.email.id_for_label }}">Correo Electrónico</label> {% endcomment %}
-                        <div class="invalid-feedback">
-                            Por favor ingresa un correo válido.
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 my-2">
-                    <div class="form-floating">
-                        {{ form.phone }}
-                        {% comment %} <label for="{{ form.phone.id_for_label }}">Teléfono</label> {% endcomment %}
-                        <div class="invalid-feedback">
-                            Por favor ingresa tu teléfono.
-                        </div>
-                    </div>
-                </div>
+            <div class="row g-3">
+                {% for field in form %}
                 <div class="col-12">
-                    <div class="form-check">
-                        {{ form.newsletter }}
-                        <label class="form-check-label" for="{{ form.newsletter.id_for_label }}">
-                            Recibir ofertas y promociones
-                        </label>
+                    <div class="form-floating">
+                        {{ field }}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                        {% comment %} <div class="invalid-feedback d-block">
+                            {{ error }}
+                        </div> {% endcomment %}
+                        {% endfor %}
                     </div>
                 </div>
+                {% endfor %}
             </div>
             
             <div class="d-flex justify-content-end mt-4">
@@ -95,4 +68,28 @@
         border-color: #198754;
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Validación del formulario
+    const form = document.getElementById('customerInfoForm');
+    
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        form.classList.add('was-validated');
+    }, false);
+    
+    // Añadir clases de Bootstrap a los campos del formulario
+    const inputs = document.querySelectorAll('#customerInfoForm input, #customerInfoForm select, #customerInfoForm textarea');
+    inputs.forEach(input => {
+        if (!input.classList.contains('form-control')) {
+            input.classList.add('form-control');
+        }
+    });
+});
+</script>
 {% endblock %}

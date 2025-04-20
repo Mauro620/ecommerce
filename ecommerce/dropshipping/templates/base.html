@@ -16,16 +16,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-light py-4 mt-auto">
-        <div class="container text-center">
-            <p class="mb-1">&copy; {{ current_year }} Mi Ecommerce. Todos los derechos reservados.</p>
-            <p class="mb-0">
-                <a href="{% url 'terms' %}" class="text-decoration-none me-2">Términos y condiciones</a> |
-                <a href="{% url 'privacy' %}" class="text-decoration-none mx-2">Política de privacidad</a> |
-                <a href="{% url 'returns' %}" class="text-decoration-none ms-2">Política de devoluciones</a>
-            </p>
-        </div>
-    </footer>
+    {% include 'footer.html' %}
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -35,7 +35,7 @@ class CustomerInfoForm(forms.Form):
     
     phone = forms.CharField(
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
+            'class': 'form-control mb-2',
             'placeholder': 'Numero de Celular',
             'required': 'required'
         }),
@@ -52,21 +52,37 @@ class CustomerInfoForm(forms.Form):
     newsletter = forms.BooleanField(
         required=False,
         widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input'
+            'class': 'form-check-input ml-2'
         }),
-        label='Recibir ofertas y promociones'
+        label='Recibir ofertas y promociones:'
     )
 
 class DeliveryInfoForm(forms.Form):
-    country = forms.CharField(label='País', max_length=100)
-    state = forms.CharField(label='Estado/Departamento', max_length=100)
+    country = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            # 'placeholder': 'País',
+            'required': 'required'
+        }),
+        label='País'
+    )
+    # country = forms.CharField(label='País', max_length=100)
+    state = forms.CharField(
+        label='Estado/Departamento',
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            # 'placeholder': 'Estado/Departamento',
+            'required': 'required'
+        })
+        )
     city = forms.CharField(label='Ciudad', max_length=100)
-    address = forms.CharField(label='Dirección', widget=forms.Textarea(attrs={'rows': 3}))
+    address = forms.CharField(label='Dirección', widget=forms.TextInput(attrs={}))
     postal_code = forms.CharField(label='Código Postal', max_length=20)
     additional_info = forms.CharField(
         label='Información Adicional', 
         required=False,
-        widget=forms.Textarea(attrs={'rows': 2})
+        widget=forms.TextInput(attrs={})
     )
 
 class PaymentInfoForm(forms.Form):

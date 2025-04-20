@@ -1,9 +1,9 @@
 from django.urls import path
-from . import views
+from dropshipping import views
 
 urlpatterns = [ 
     path('', views.index, name='home'),
-    path('about', views.index, name='about'),
+    path('set_currency/', views.set_currency, name='set_currency'),
     path('contact', views.index, name='contact'),
     path('terminos', views.index, name='terms'),
     path('privacy', views.index, name='privacy'),
@@ -11,7 +11,7 @@ urlpatterns = [
     path('policies', views.index, name='policies'),
 
     # url pagina del producto
-    path('products/<uuid:product_id>', views.detailProduct, name='product_detail'),
+    path('products/<uuid:product_id>', views.detail_product_view, name='product_detail'),
     # path('checkout/<uuid:product_id>/', views.checkout, name='checkout'),
     # url formulario de compra
     # url checkout

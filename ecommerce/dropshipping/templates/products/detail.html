@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{%load humanize%}
 
 {% block content %}
 <div class="container mt-5">
@@ -44,33 +45,28 @@
                         <p>
                           <span class="text-warning">
                             {% for i in rating_range %}
-                            {% with forloop.counter|add:1 as incremented_counter %}
-                              {% if forloop.counter <= product_rating%} 
-                               <i class="bi bi-star-fill text-warning"></i> 
-                              {% elif product_rating > forloop.counter and product_rating < incremented_counter %}
-                              <i class="bi bi-star-half text-warning"></i>
+                              {% if i <= rating_avg%} 
+                               <i class="bi bi-star-fill text-warning"></i>
                               {% else %}
                               <i class="bi bi-star text-warning"></i>
-                              
                               {% endif %}   
-                            {% endwith %}
                             {% endfor %}
                           </span>
-                          <small class="text-muted">{{ product_rating}}</small>
+                          <small class="text-muted">{{ rating_avg }}</small>
                         </p>
                       </div>
                     
                     <!-- Precio -->
                     <div class="mb-4">
-                        <span class="h3 text-danger">${{ product.end_price }}</span>
+                        <span class="h3 text-danger">${{ product.converted_price|intcomma }} {{ product.currency }}</span>
                         {% if product.offer_price %}
-                        <span class="text-muted text-decoration-line-through ms-2">${{ product.offer_price }}</span>
+                        <span class="text-muted text-decoration-line-through ms-2">${{ product.converted_offer_price|intcomma }} {{product.currency}}</span>
                         <span class="badge bg-danger ms-2">Oferta</span>
                         {% endif %}
                     </div>
                     
                     <!-- Descripción -->
-                    <p class="mb-4 lead">{{ product.description }}</p>
+                    <p class="mb-4 lead flex flex-wrap">{{ product.description }}</p>
                     
                     <!-- Color (opcional) -->
                     {% comment %} <div class="mb-4">
@@ -93,11 +89,15 @@
                     
                     <!-- Cantidad -->
                     <div class="mb-4">
-                        <label for="quantity" class="form-label">Cantidad:</label>
                         <div class="d-flex align-items-center">
-                            <button class="btn btn-outline-secondary quantity-btn" onclick="changeQuantity(-1)">-</button>
-                            <input type="number" id="quantity" value="1" min="1" class="form-control text-center mx-2" style="width: 70px;">
-                            <button class="btn btn-outline-secondary quantity-btn" onclick="changeQuantity(1)">+</button>
+                            <label class="me-2">Quantity:</label>
+                            <select class="form-select w-25" id="quantity" name="quantity">
+                                    <option class="mr-2">1</option>
+                                    <option class="mr-2">2</option>
+                                    <option class="mr-2">3</option>
+                                    <option class="mr-2">4</option>
+                                    <option class="mr-2">5</option>
+                            </select>
                         </div>
                     </div>
                     
@@ -110,8 +110,28 @@
                             </button>
                         </form>
                     </div>
+                    <!-- Additional Info -->
+            <div class="mt-4">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-truck text-primary me-2"></i>
+                    <span>Free shipping on orders over $50</span>
+                </div>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-arrow-clockwise text-primary me-2"></i>
+                    <span>30-day return policy</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-shield-check text-primary me-2"></i>
+                    <span>2-year warranty</span>
+                </div>
                 </div>
             </div>
+        </div>
+    </div>
+<!-- Review section -->
+    <div class="row mt-5">
+        <div class="col-lg-8">
+            {% include 'products/reviews.html'%}
         </div>
     </div>
 </div>

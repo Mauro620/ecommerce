@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from django.db.models import Avg
 
 class Products(models.Model):
     product_id = models.UUIDField(default=uuid.uuid4 , primary_key=True)
@@ -13,3 +14,12 @@ class Products(models.Model):
 
     def __str__(self):
         return self.name
+    
+    @property
+    def average_rating(self):
+        return self.reviews.objects.filter(product=self).aggregate(Avg('rating'))['rating__avg'] or 0   
+    
+    @property
+    def review_count(self):
+        return self.reviews.count()
+

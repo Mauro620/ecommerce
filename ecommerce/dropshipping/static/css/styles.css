@@ -10926,13 +10926,13 @@ section {
 .device[data-device=iPhoneX][data-orientation=portrait][data-color=black] .screen {
   top: 3.1855955679%;
   left: 6.8870523416%;
-  width: 86.2258953168%;
-  height: 93.6288088643%;
+  width: auto;
+  height: auto;
 }
 
 .device[data-device=iPhoneX][data-orientation=portrait][data-color=black]::after {
   content: "";
-  background-image: url("../assets/img/portrait_black.png");
+  background-image: url("../images/image_index.png");
 }
 
 .device[data-device=iPhoneX][data-orientation=portrait][data-color=black] .button {
@@ -11259,4 +11259,9 @@ main {
 footer {
   background-color: #f8f9fa;
   border-top: 1px solid #e9ecef;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  min-height: 500px;
 }
