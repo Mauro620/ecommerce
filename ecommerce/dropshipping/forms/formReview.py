@@ -17,7 +17,7 @@ class ReviewForm(forms.ModelForm):
         fields = ['email', 'rating', 'comment']
         widgets = {
             'rating': forms.NumberInput(attrs={'min': 1, 'max': 5, 'class': 'form-control', 'required': 'required'}),
-            'comment': forms.Textarea(attrs={'rows': 2 , 'class': 'form-control', 'placeholder': 'Comentario', 'required': 'required'}),
+            'comment': forms.Textarea(attrs={'rows': 2 , 'class': 'form-control', 'placeholder': 'Comentario'}),
         }
 
         

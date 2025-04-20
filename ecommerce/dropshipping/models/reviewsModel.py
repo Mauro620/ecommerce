@@ -8,7 +8,7 @@ class Review(models.Model):
     product = models.ForeignKey(Products, null=False, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(Users, null=False, on_delete=models.CASCADE, related_name='reviews')
     rating = models.IntegerField(null=False, choices=[(i, str(i)) for i in range(1, 6)], default=1)
-    comment = models.TextField(null=True)
+    comment = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
