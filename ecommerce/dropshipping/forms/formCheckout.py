@@ -4,7 +4,7 @@ from django.core.validators import RegexValidator
 
 
 class CustomerInfoForm(forms.Form):
-    first_name = forms.CharField(
+    name = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Nombre',
@@ -14,7 +14,7 @@ class CustomerInfoForm(forms.Form):
         label=''
     )
     
-    last_name = forms.CharField(
+    surname = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Apellido',
@@ -33,7 +33,7 @@ class CustomerInfoForm(forms.Form):
         label=''
     )
     
-    phone = forms.CharField(
+    phone_number = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control mb-2',
             'placeholder': 'Numero de Celular',
@@ -52,7 +52,7 @@ class CustomerInfoForm(forms.Form):
     newsletter = forms.BooleanField(
         required=False,
         widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input ml-2'
+            'class': 'form-check-input ml-2 mt-3',
         }),
         label='Recibir ofertas y promociones:'
     )

@@ -2224,8 +2224,8 @@ textarea.form-control-lg {
 }
 
 .form-check-input {
-  width: 1em;
-  height: 1em;
+  width: 0.5em;
+  height: 0.5em;
   margin-top: 0.25em;
   vertical-align: top;
   background-color: #fff;

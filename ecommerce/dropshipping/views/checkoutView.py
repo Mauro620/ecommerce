@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from dropshipping.models.productModel import Products
 from dropshipping.forms.formCheckout import CustomerInfoForm, DeliveryInfoForm, PaymentInfoForm
 from django.contrib import messages
-from dropshipping.utils.exchanges import convert_currency
+from dropshipping.utils.helpers import prepare_product_with_conversion
 
 def checkout(request, product_id):
     if request.method == 'POST':
@@ -39,15 +39,8 @@ def checkout_step1(request, product_id):
     Template:
         checkout/step1.html
     """
-    product = get_object_or_404(Products, product_id=product_id)
+    product = prepare_product_with_conversion(get_object_or_404(Products, product_id=product_id), request.session)
 
-    selected_currency = request.session.get("currency", "COP")
-
-    converted_price = convert_currency(product.end_price, "COP", selected_currency)
-    converted_offer_price = convert_currency(product.offer_price, "COP", selected_currency)
-    product.converted_price = round(converted_price, 2)
-    product.converted_offer_price = round(converted_offer_price, 2)
-    product.currency = selected_currency
     
     if request.method == 'POST':
         form = CustomerInfoForm(request.POST)
@@ -68,7 +61,7 @@ def checkout_step1(request, product_id):
     return render(request, 'checkout/step1.html', context)
 
 def checkout_step2(request, product_id):
-    product = get_object_or_404(Products, product_id=product_id)
+    product = prepare_product_with_conversion(get_object_or_404(Products, product_id=product_id), request.session)
     
     if 'customer_info' not in request.session:
         return redirect('checkout_step1', product_id=product_id)
@@ -90,7 +83,8 @@ def checkout_step2(request, product_id):
     return render(request, 'checkout/step2.html', context)
 
 def checkout_step3(request, product_id):
-    product = get_object_or_404(Products, product_id=product_id)
+    product = prepare_product_with_conversion(get_object_or_404(Products, product_id=product_id), request.session)
+
     
     if 'delivery_info' not in request.session:
         return redirect('checkout_step1', product_id=product_id)
@@ -112,5 +106,21 @@ def checkout_step3(request, product_id):
     return render(request, 'checkout/step3.html', context)
 
 def checkout_complete(request, product_id):
-    # Aquí procesarías el pago realmente
-    return render(request, 'checkout/complete.html')
+    if not all(k in request.session for k in ('customer_info', 'delivery_info', 'payment_info')):
+        return redirect('checkout_step1', product_id=product_id)
+    
+    product = prepare_product_with_conversion(get_object_or_404(Products, product_id=product_id), request.session)
+    customer_info = request.session.get('customer_info')
+    delivery_info = request.session.get('delivery_info')
+    payment_info = request.session.get('payment_info')
+
+    print("Customer Info:", customer_info)
+    print("Delivery Info:", delivery_info)
+    print("Payment Info:", payment_info)
+
+    # Limpiar la sesión
+    for key in ('customer_info', 'delivery_info', 'payment_info'):
+        if key in request.session:
+            del request.session[key]
+
+    return render(request, 'checkout/complete.html', {'product': product})

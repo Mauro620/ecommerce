@@ -13,8 +13,8 @@
                 {% for field in form %}
                 <div class="col-12">
                     <div class="form-floating">
-                        {{ field }}
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
                         {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
                         {% endif %}
@@ -84,12 +84,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }, false);
     
     // Añadir clases de Bootstrap a los campos del formulario
-    const inputs = document.querySelectorAll('#customerInfoForm input, #customerInfoForm select, #customerInfoForm textarea');
+    const inputs = document.querySelectorAll(' #customerInfoForm select, #customerInfoForm textarea');
     inputs.forEach(input => {
         if (!input.classList.contains('form-control')) {
             input.classList.add('form-control');
         }
-    });
+    }); 
 });
 </script>
 {% endblock %}
