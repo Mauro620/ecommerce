@@ -19,6 +19,10 @@ urlpatterns = [
     path('checkout/<uuid:product_id>/delivery/', views.checkout_step2, name='checkout_step2'),
     path('checkout/<uuid:product_id>/payment/', views.checkout_step3, name='checkout_step3'),
     path('checkout/<uuid:product_id>/complete/', views.checkout_complete, name='checkout_complete'),
+    # tu vista del formulario
+    path('ajax/load-states/', views.load_states, name='ajax_load_states'),
+    path('ajax/load-cities/', views.load_cities, name='ajax_load_cities'),
+
     # pasarela de pagos
     #  
 ] 

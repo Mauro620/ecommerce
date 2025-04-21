@@ -1,3 +1,4 @@
+from dropshipping.models.addressModel import Country, State, City
 # dropshipping/forms.py
 from django import forms
 from django.core.validators import RegexValidator
@@ -57,33 +58,40 @@ class CustomerInfoForm(forms.Form):
         label='Recibir ofertas y promociones:'
     )
 
+
 class DeliveryInfoForm(forms.Form):
-    country = forms.CharField(
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            # 'placeholder': 'País',
-            'required': 'required'
-        }),
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.exclude(code__isnull=True).exclude(code=''),
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_country'}),
         label='País'
     )
-    # country = forms.CharField(label='País', max_length=100)
-    state = forms.CharField(
-        label='Estado/Departamento',
-        max_length=100,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            # 'placeholder': 'Estado/Departamento',
-            'required': 'required'
-        })
-        )
-    city = forms.CharField(label='Ciudad', max_length=100)
-    address = forms.CharField(label='Dirección', widget=forms.TextInput(attrs={}))
-    postal_code = forms.CharField(label='Código Postal', max_length=20)
-    additional_info = forms.CharField(
-        label='Información Adicional', 
-        required=False,
-        widget=forms.TextInput(attrs={})
+
+    state = forms.ModelChoiceField(
+        queryset=State.objects.none(),
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_state'}),
+        label='Estado/Departamento'
     )
+
+    city = forms.ModelChoiceField(
+        queryset=City.objects.none(),
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_city'}),
+        label='Ciudad'
+    )
+
+    address = forms.CharField(label='Dirección', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    postal_code = forms.CharField(label='Código Postal', max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    additional_info = forms.CharField(
+        label='Información Adicional',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(DeliveryInfoForm, self).__init__(*args, **kwargs)
+        self.fields['country'].empty_label = "Seleccione un país"
+        self.fields['state'].empty_label = "Seleccione un estado"
+        self.fields['city'].empty_label = "Seleccione una ciudad"
+
 
 class PaymentInfoForm(forms.Form):
     CARD_TYPES = (

@@ -97,4 +97,44 @@
         });
     });
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#id_country').change(function () {
+            var countryId = $(this).val();
+            $.ajax({
+                url: '/ajax/load-states/',
+                data: {
+                    'country_id': countryId
+                },
+                success: function (data) {
+                    $('#id_state').html('<option value="">Seleccione un estado</option>');
+                    $('#id_city').html('<option value="">Seleccione una ciudad</option>');
+                    data.forEach(function (state) {
+                        $('#id_state').append('<option value="' + state.id + '">' + state.name + '</option>');
+                    });
+                }
+            });
+        });
+
+        $('#id_state').change(function () {
+            var stateId = $(this).val();
+            $.ajax({
+                url: '/ajax/load-cities/',
+                data: {
+                    'state_id': stateId
+                },
+                success: function (data) {
+                    $('#id_city').html('<option value="">Seleccione una ciudad</option>');
+                    data.forEach(function (city) {
+                        $('#id_city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+
 {% endblock %}

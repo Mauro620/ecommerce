@@ -3,6 +3,8 @@ from dropshipping.models.productModel import Products
 from dropshipping.forms.formCheckout import CustomerInfoForm, DeliveryInfoForm, PaymentInfoForm
 from django.contrib import messages
 from dropshipping.utils.helpers import prepare_product_with_conversion
+from django.http import JsonResponse
+from dropshipping.models.addressModel import State, City
 
 def checkout(request, product_id):
     if request.method == 'POST':
@@ -124,3 +126,15 @@ def checkout_complete(request, product_id):
             del request.session[key]
 
     return render(request, 'checkout/complete.html', {'product': product})
+
+
+def load_states(request):
+    country_id = request.GET.get('country_id')
+    states = State.objects.filter(country_id=country_id).values('id', 'name')
+    return JsonResponse(list(states), safe=False)
+
+def load_cities(request):
+    state_id = request.GET.get('state_id')
+    cities = City.objects.filter(state_id=state_id).values('id', 'name')
+    return JsonResponse(list(cities), safe=False)
+

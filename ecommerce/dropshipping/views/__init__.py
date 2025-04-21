@@ -5,4 +5,6 @@ from .checkoutView import (
     checkout_step2,
     checkout_step3,
     checkout_complete,
+    load_states,
+    load_cities,
 )
