@@ -4,7 +4,7 @@ from dropshipping.forms.formCheckout import CustomerInfoForm, DeliveryInfoForm, 
 from django.contrib import messages
 from dropshipping.utils.helpers import prepare_product_with_conversion
 from django.http import JsonResponse
-from dropshipping.models.addressModel import State, City
+from dropshipping.models.addressModel import Country, State, City
 
 def checkout(request, product_id):
     if request.method == 'POST':
@@ -70,9 +70,31 @@ def checkout_step2(request, product_id):
     
     if request.method == 'POST':
         form = DeliveryInfoForm(request.POST)
+
+        country_id = request.POST.get('country')
+        state_id = request.POST.get('state')
+
+        print("Country ID:", country_id)
+        print("State ID:", state_id)
+        if country_id:
+            form.fields['state'].queryset = State.objects.filter(country_id=country_id)
+        if state_id:
+            form.fields['city'].queryset = City.objects.filter(state_id=state_id)
         if form.is_valid():
-            request.session['delivery_info'] = form.cleaned_data
+            delivery_info = {
+                'country_id': form.cleaned_data['country'].id,
+                'country_name': form.cleaned_data['country'].name,
+                'state_id': form.cleaned_data['state'].id,
+                'state_name': form.cleaned_data['state'].name,
+                'city_id': form.cleaned_data['city'].id,
+                'city_name': form.cleaned_data['city'].name,
+                'address': form.cleaned_data['address'],
+                'postal_code': form.cleaned_data['postal_code'],
+                'additional_info': form.cleaned_data['additional_info'],
+            }
+            request.session['delivery_info'] = delivery_info
             return redirect('checkout_step3', product_id=product_id)
+
     else:
         form = DeliveryInfoForm()
     
@@ -81,6 +103,7 @@ def checkout_step2(request, product_id):
         'form': form,
         'current_step': 2,
         'total_steps': 3,
+        'delivery_info': request.session.get('delivery_info', {}),
     }
     return render(request, 'checkout/step2.html', context)
 

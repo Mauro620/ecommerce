@@ -62,19 +62,19 @@ class CustomerInfoForm(forms.Form):
 class DeliveryInfoForm(forms.Form):
     country = forms.ModelChoiceField(
         queryset=Country.objects.exclude(code__isnull=True).exclude(code=''),
-        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_country'}),
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_country', 'name': 'name_country'}),
         label='País'
     )
 
     state = forms.ModelChoiceField(
         queryset=State.objects.none(),
-        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_state'}),
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_state', 'name': 'name_state'}),
         label='Estado/Departamento'
     )
 
     city = forms.ModelChoiceField(
         queryset=City.objects.none(),
-        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_city'}),
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_city', 'name': 'name_city'}),
         label='Ciudad'
     )
 

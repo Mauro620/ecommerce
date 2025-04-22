@@ -67,9 +67,9 @@
                     {% if request.session.customer_info %}
                     <div class="mb-3">
                         <h6 class="mb-2">Información del Cliente</h6>
-                        <p class="small mb-1">{{ request.session.customer_info.first_name }} {{ request.session.customer_info.last_name }}</p>
+                        <p class="small mb-1">{{ request.session.customer_info.name }} {{ request.session.customer_info.surname }}</p>
                         <p class="small mb-1">{{ request.session.customer_info.email }}</p>
-                        <p class="small">{{ request.session.customer_info.phone }}</p>
+                        <p class="small">{{ request.session.customer_info.phone_number }}</p>
                     </div>
                     {% endif %}
                     
@@ -78,8 +78,8 @@
                     <div class="mb-3">
                         <h6 class="mb-2">Dirección de Envío</h6>
                         <p class="small mb-1">{{ request.session.delivery_info.address }}</p>
-                        <p class="small mb-1">{{ request.session.delivery_info.city }}, {{ request.session.delivery_info.state }}</p>
-                        <p class="small">{{ request.session.delivery_info.country }} - {{ request.session.delivery_info.postal_code }}</p>
+                        <p class="small mb-1">{{ request.session.delivery_info.city_name }}, {{ request.session.delivery_info.state_name }}</p>
+                        <p class="small">{{ request.session.delivery_info.country_name }} - {{ request.session.delivery_info.postal_code }}</p>
                         {% if request.session.delivery_info.additional_info %}
                         <p class="small text-muted">Notas: {{ request.session.delivery_info.additional_info }}</p>
                         {% endif %}
