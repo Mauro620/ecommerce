@@ -3,10 +3,12 @@ from dropshipping.models.productModel import Products
 from django.db.models import Avg
 from django.shortcuts import redirect
 from dropshipping.utils import convert_currency
+from dropshipping.utils.formatters import round_to_1_decimal
+from django.db.models.functions import Round
 
 def index(request):
     products = Products.objects.prefetch_related('images').annotate(
-    avg_rating=Avg('reviews__rating')
+        avg_rating=Round(Avg('reviews__rating'), 1)  # Redondear a 1 decimal
 )
     selected_currency = request.session.get("currency", "COP")
 
@@ -18,6 +20,10 @@ def index(request):
         product.converted_price = round(converted_price, 2)
         product.currency = selected_currency
 
+    for product in products:
+        product.image_pairs = [
+            product.images.all()[i:i+2] for i in range(0, product.images.count(), 2)
+        ]
 
     context = {
         "title": "shingy",

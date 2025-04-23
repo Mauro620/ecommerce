@@ -8,36 +8,32 @@ class CustomerInfoForm(forms.Form):
     name = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nombre',
             'required': 'required'
         }),
         max_length=100,
-        label=''
+        label='Nombres'
     )
     
     surname = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Apellido',
             'required': 'required'
         }),
         max_length=100,
-        label=''
+        label='Apellidos'
     )
     
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Correo electrónico',
             'required': 'required'
         }),
-        label=''
+        label='Correo electrónico'
     )
     
     phone_number = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control mb-2',
-            'placeholder': 'Numero de Celular',
             'required': 'required'
         }),
         max_length=20,
@@ -47,7 +43,7 @@ class CustomerInfoForm(forms.Form):
                 message="El número de teléfono debe tener entre 9 y 15 dígitos."
             )
         ],
-        label=''
+        label='Numero de Celular'
     )
     
     newsletter = forms.BooleanField(
@@ -83,7 +79,7 @@ class DeliveryInfoForm(forms.Form):
     additional_info = forms.CharField(
         label='Información Adicional',
         required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        # widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
     def __init__(self, *args, **kwargs):

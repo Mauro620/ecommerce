@@ -15,4 +15,4 @@ class Image(models.Model):
     def get_image_url(self):
         if self.image and hasattr(self.image, 'url') and os.path.exists(self.image.path):
             return self.image.url
-        return static('images/reloj1.webp')
+        return None

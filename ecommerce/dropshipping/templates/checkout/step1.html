@@ -13,8 +13,8 @@
                 {% for field in form %}
                 <div class="col-12">
                     <div class="form-floating">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field }}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
                         {% endif %}

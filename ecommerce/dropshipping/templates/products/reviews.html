@@ -198,6 +198,13 @@
         </button>
         
         <div id="review-form" style="display:none;" class="mt-3">
+            {%for review in review_form%}
+              {% if review_form.errors %}
+                <div class="alert alert-danger">
+                    {{ review_form.errors }}
+                </div>
+              {% endif %}
+            {%endfor%}
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group mb-3">

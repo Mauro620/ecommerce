@@ -5,4 +5,4 @@ from .ordersDetailModel import OrderDetail
 from .paymentsModel import Payments
 from .reviewsModel import Review
 from .imagesModel import Image
-from .addressModel import Country, State, City
+from .addressModel import Country, State, City, Address
