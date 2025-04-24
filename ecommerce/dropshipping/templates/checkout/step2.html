@@ -9,24 +9,19 @@
         <form method="post" id="deliveryInfoForm" class="needs-validation" novalidate>
             {% csrf_token %}
             
-            {% for field in form %}
             <div class="row g-3">
-                <div class="col-md-12">
+                {% for field in form %}
+                <div class="col-12">
                     <div class="form-floating">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field }}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
                         {% endif %}
-                        {% for error in field.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ error }}
-                        </div>
-                        {% endfor %}
                     </div>
                 </div>
-            </div>
                 {% endfor %}
+            </div>
             
             <div class="d-flex justify-content-between mt-4">
                 <a href="{% url 'checkout_step1' product.product_id %}" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
