@@ -28,3 +28,26 @@ class ReviewService:
         review.product = product
         review.save()
         return review
+    
+    @staticmethod
+    def get_review_value(product):
+        reviews = Review.objects.filter(product=product)
+        if not reviews.exists():
+            return 0
+        total_rating = sum(review.rating for review in reviews)
+        values = { 
+            5: 0,
+            4: 0,
+            3: 0,
+            2: 0,
+            1: 0
+        }
+        for review in reviews:
+            if review.rating not in values:
+                raise ValidationError("Valor de reseña no válido.")
+            values[review.rating] += 1
+        for value in values:
+            values[value] = round((values[value] / len(reviews)) * 100)
+
+
+        return values

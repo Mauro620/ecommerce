@@ -74,8 +74,6 @@ def checkout_step2(request, product_id):
         country_id = request.POST.get('country')
         state_id = request.POST.get('state')
 
-        print("Country ID:", country_id)
-        print("State ID:", state_id)
         if country_id:
             form.fields['state'].queryset = State.objects.filter(country_id=country_id)
         if state_id:

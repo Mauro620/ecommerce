@@ -45,14 +45,6 @@ class CustomerInfoForm(forms.Form):
         ],
         label='Numero de Celular'
     )
-    
-    newsletter = forms.BooleanField(
-        required=False,
-        widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input ml-2 mt-3',
-        }),
-        label='Recibir ofertas y promociones:'
-    )
 
 
 class DeliveryInfoForm(forms.Form):

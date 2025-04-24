@@ -23,6 +23,7 @@ urlpatterns = [
     path('ajax/load-states/', views.load_states, name='ajax_load_states'),
     path('ajax/load-cities/', views.load_cities, name='ajax_load_cities'),
 
+    path('products/test/<uuid:product_id>', views.test_review_product, name='test_review_product'),
     # pasarela de pagos
     #  
 ] 
