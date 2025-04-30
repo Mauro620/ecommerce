@@ -3,7 +3,8 @@ import uuid
 from django.core.validators import RegexValidator, MinLengthValidator
 
 class Users(models.Model):
-    email = models.EmailField(primary_key=True)
+    user_id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+    email = models.EmailField(unique=True, null=False, blank=False)
     name = models.CharField(max_length=50, null=False)
     surname = models.CharField(max_length=50, null=False)
     phone_number = models.CharField(null=False, blank=False, max_length=15, 

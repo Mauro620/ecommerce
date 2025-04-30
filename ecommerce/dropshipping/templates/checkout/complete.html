@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Tarjeta de confirmación -->
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5 text-center">
+                    <!-- Icono de confirmación -->
+                    <div class="mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#28a745" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                    </div>
+                    
+                    <h1 class="display-4 mb-4">¡Gracias por tu compra!</h1>
+                    <p class="lead mb-5">Tu pedido ha sido procesado exitosamente. Hemos enviado un correo de confirmación a <strong>{{ customer_info.email }}</strong> con los detalles de tu compra.</p>
+                    
+                    <!-- Resumen del pedido -->
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Resumen de tu pedido</h5>
+                            
+                            <!-- Producto -->
+                            <div class="d-flex mb-4">
+                                <img src="{{ product.images.first.get_image_url }}" 
+                                     alt="{{ product.name }}"
+                                     class="rounded me-3"
+                                     style="width: 80px; height: 80px; object-fit: cover;">
+                                <div class="text-start">
+                                    <h6 class="mb-1">{{ product.name }}</h6>
+                                    <p class="text-muted small mb-1">Cantidad: 1</p>
+                                    <p class="fw-bold">${{ product.converted_price|intcomma }} {{ product.currency }}</p>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <!-- Información del cliente -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <h6 class="mb-2">Información del cliente</h6>
+                                    <p class="small mb-1">{{ customer_info.first_name }} {{ customer_info.last_name }}</p>
+                                    <p class="small mb-1">{{ customer_info.email }}</p>
+                                    <p class="small">{{ customer_info.phone }}</p>
+                                </div>
+                                
+                                <!-- Información de envío -->
+                                <div class="col-md-6">
+                                    <h6 class="mb-2">Dirección de envío</h6>
+                                    <p class="small mb-1">{{ delivery_info.address }}</p>
+                                    <p class="small mb-1">{{ delivery_info.city_name }}, {{ delivery_info.state_name }}</p>
+                                    <p class="small">{{ delivery_info.country_name }} - {{ delivery_info.postal_code }}</p>
+                                    {% if delivery_info.additional_info %}
+                                    <p class="small text-muted">Notas: {{ delivery_info.additional_info }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <!-- Resumen de pago -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="mb-2">Método de pago</h6>
+                                    <p class="small">
+                                        {% if payment_info.card_type == 'visa' %}
+                                        <i class="fab fa-cc-visa me-2"></i> Visa
+                                        {% elif payment_info.card_type == 'mastercard' %}
+                                        <i class="fab fa-cc-mastercard me-2"></i> MasterCard
+                                        {% elif payment_info.card_type == 'amex' %}
+                                        <i class="fab fa-cc-amex me-2"></i> American Express
+                                        {% endif %}
+                                        terminada en {{ payment_info.card_number|slice:"-4:" }}
+                                    </p>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Subtotal:</span>
+                                        <span>${{ product.converted_price|intcomma }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Envío:</span>
+                                        <span class="text-success">Gratis</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span>Impuestos:</span>
+                                        <span>$0.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between fw-bold fs-5">
+                                        <span>Total:</span>
+                                        <span>${{ product.converted_price|intcomma }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Información adicional -->
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">¿Qué sigue?</h5>
+                        <p class="mb-0">
+                            Hemos recibido tu pedido y lo estamos preparando para el envío. 
+                            Recibirás un correo electrónico con la información de seguimiento 
+                            una vez que tu paquete haya sido despachado.
+                        </p>
+                    </div>
+                    
+                    <!-- Botón para volver a la tienda -->
+                    <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5 py-3 mt-4">
+                        <i class="fas fa-shopping-bag me-2"></i> Volver a la tienda
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .alert-info {
+        background-color: #f8f9fa;
+        border-color: #e9ecef;
+        color: #495057;
+    }
+    
+    .btn-lg {
+        border-radius: 50px;
+    }
+</style>
+{% endblock %}

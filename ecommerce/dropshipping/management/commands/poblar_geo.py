@@ -1,44 +1,73 @@
 import unicodedata
+import csv
+from django.core.management.base import BaseCommand
+from dropshipping.models import Country, State, City
 
 # --- Normalización fuera de la clase ---
 def normalize(text):
     return unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('utf-8').lower()
 
-
-from django.core.management.base import BaseCommand
-import csv
-from dropshipping.models import Country, State, City
+# --- Lista de países permitidos (idioma español + EEUU) ---
+ALLOWED_COUNTRIES = {
+    "Argentina", "Bolivia", "Chile", "Colombia", "Costa Rica", "Cuba", "Ecuador",
+    "El Salvador", "España", "Guatemala", "Honduras", "México", "Nicaragua", "Panamá",
+    "Paraguay", "Perú", "Puerto Rico", "República Dominicana", "Uruguay", "Venezuela",
+    "Estados Unidos", "United States"
+}
 
 class Command(BaseCommand):
-    help = 'Poblar la base de datos con datos geográficos desde un CSV'
-
-    def add_arguments(self, parser):
-        parser.add_argument('--csv', type=str, help='Ruta al archivo CSV con ciudades')
+    help = 'Elimina y repuebla Países, Estados y Ciudades desde worldcities.csv'
 
     def handle(self, *args, **kwargs):
-        csv_path = kwargs['csv']
+        csv_path = 'dropshipping/management/worldcities.csv'
 
-        print("Insertando ciudades...")
+        print("🧹 Borrando datos anteriores...")
+        City.objects.all().delete()
+        State.objects.all().delete()
+        Country.objects.all().delete()
+
+        print("📥 Cargando datos desde CSV...")
+
         with open(csv_path, newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
+            count = 0
+
             for row in reader:
                 country_name = row['country'].strip()
-                state_name = row['admin_name'].strip()
-                city_name = row['city'].strip()
-
-                # Obtener o crear país
-                country, _ = Country.objects.get_or_create(name=country_name)
-
-                # Normalizamos estado para buscarlo
-                normalized_state_name = normalize(state_name)
-                states = State.objects.filter(country=country)
-                matched_states = [s for s in states if normalize(s.name) == normalized_state_name]
-
-                if matched_states:
-                    state = matched_states[0]
-                else:
-                    print(f"❌ No se encontró el estado '{state_name}' en el país '{country_name}'")
+                if country_name not in ALLOWED_COUNTRIES:
                     continue
 
-                # Crear ciudad si no existe
-                City.objects.get_or_create(name=city_name, state=state)
+                city_name = row['city'].strip()
+                state_name = row.get('admin_name', '').strip()
+                postal_code = row.get('postal', '00000').strip()
+                country_code = row.get('iso2', '') or row.get('iso3', '')
+
+                # Crear país
+                country, _ = Country.objects.get_or_create(
+                    name=country_name,
+                    defaults={'code': country_code}
+                )
+
+                # Crear estado
+                normalized_state = normalize(state_name)
+                state = State.objects.filter(country=country).filter(name__iexact=state_name).first()
+
+                if not state:
+                    state = State.objects.create(
+                        name=state_name or "Estado Desconocido",
+                        code=normalized_state[:10].upper(),
+                        country=country
+                    )
+
+                # Crear ciudad
+                City.objects.get_or_create(
+                    name=city_name,
+                    postal_code=postal_code,
+                    state=state
+                )
+
+                count += 1
+                if count % 500 == 0:
+                    print(f"  → {count} ciudades insertadas...")
+
+        print(f"✅ Carga finalizada: {count} ciudades registradas.")
