@@ -1,0 +1,16 @@
+ <!-- Banner de Promoción - Versión simplificada -->
+{% if request.path == '/' or '/products/' in request.path %}
+     <div id="promo-banner" style="background: linear-gradient(to right, #ff416c, #ff4b2b); 
+                                color: white; 
+                                padding: 8px 0; 
+                                text-align: center;
+                                position: sticky;
+                                top: 80px;
+                                z-index: 1000;
+                                font-size: 0.9rem;">
+        <div class="container">
+            🚀 <strong>OFERTA ESPECIAL!</strong> 30% DE DESCUENTO - Termina en: 
+            <span id="countdown" style="font-weight: bold;">00:24:46</span>
+        </div>
+    </div>
+{%endif%}

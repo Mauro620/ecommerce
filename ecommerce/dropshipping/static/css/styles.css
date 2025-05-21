@@ -11265,3 +11265,28 @@ footer {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   min-height: 500px;
 }
+
+/* banner.css */
+.promo-banner {
+    background: linear-gradient(to right, #ff416c, #ff4b2b);
+    color: white;
+    padding: 8px 0;
+    text-align: center;
+    position: sticky;
+    top: 56px;
+    z-index: 1030;
+    font-size: 0.9rem;
+}
+
+/* Ajuste para el contenido principal */
+main {
+    padding-top: 100px !important;
+}
+
+/* Ocultar en móviles si es necesario */
+@media (max-width: 768px) {
+    .promo-banner {
+        font-size: 0.8rem;
+        padding: 6px 0;
+    }
+}
